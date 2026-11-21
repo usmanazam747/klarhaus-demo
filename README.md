@@ -60,5 +60,6 @@ Screenshot the canvas for the Fiverr gallery (Gig 4).
 
 - The site is set to `noindex` because the company is fictional. Keep it that way.
 - `/impressum` and `/datenschutz` (text in `src/content/legal.ts`) name you as the operator, with the same details as integraitapp.com. Update them if your address or email changes.
+- Link previews (Upwork, LinkedIn, WhatsApp) use the Open Graph tags in `src/app/[lang]/layout.tsx` and the static share image `src/app/[lang]/opengraph-image.jpg` (1200×630). To change the image, replace that file; it has to live in `[lang]` because that is the root layout's segment.
 - The privacy page describes what the code does today. **Before setting `N8N_WEBHOOK_URL`, rewrite section 5** (the quote data would then be stored and forwarded). `ANTHROPIC_API_KEY` is already covered by section 4.
 - Vercel's Hobby plan is fine for this non-commercial demo. Client sites go on Cloudflare or a paid plan.
