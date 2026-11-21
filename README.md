@@ -59,5 +59,6 @@ Screenshot the canvas for the Fiverr gallery (Gig 4).
 ## Before deploying publicly
 
 - The site is set to `noindex` because the company is fictional. Keep it that way.
-- A public site run from Germany needs an Impressum and a privacy page naming you as the operator; add both before sharing the link.
+- `/impressum` and `/datenschutz` (text in `src/content/legal.ts`) name you as the operator, with the same details as integraitapp.com. Update them if your address or email changes.
+- The privacy page describes what the code does today. **Before setting `N8N_WEBHOOK_URL`, rewrite section 5** (the quote data would then be stored and forwarded). `ANTHROPIC_API_KEY` is already covered by section 4.
 - Vercel's Hobby plan is fine for this non-commercial demo. Client sites go on Cloudflare or a paid plan.

@@ -26,6 +26,14 @@ export function Footer({ lang }: { lang: Locale }) {
       <div className="border-t border-slate-200 px-4 py-4 text-center text-xs text-slate-500">
         <p>{ui.demoBanner[lang]}</p>
         <p>{ui.builtBy[lang]}</p>
+        <p className="mt-2 space-x-4">
+          <Link href={`/${lang}/impressum`} className="underline hover:text-teal-800">
+            Impressum
+          </Link>
+          <Link href={`/${lang}/datenschutz`} className="underline hover:text-teal-800">
+            {lang === "de" ? "Datenschutz" : "Privacy"}
+          </Link>
+        </p>
       </div>
     </footer>
   );
