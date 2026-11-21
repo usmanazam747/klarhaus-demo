@@ -32,7 +32,8 @@ export async function POST(request: Request) {
 
   const webhook = process.env.N8N_WEBHOOK_URL;
   if (!webhook) {
-    // WHY: the demo must work without n8n; the request is only logged locally.
+    // WHY: the demo must work without n8n, and the privacy policy (section 5) promises the details are
+    // discarded: log no names or contact data here. Setting N8N_WEBHOOK_URL requires updating that section first.
     console.info("Quote request (no N8N_WEBHOOK_URL set):", quote.service, quote.size, quote.lang);
     return Response.json({ ok: true, forwarded: false });
   }

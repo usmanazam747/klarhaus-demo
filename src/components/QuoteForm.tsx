@@ -16,9 +16,11 @@ const copy = {
     date: "Wunschtermin",
     message: "Was sollen wir wissen?",
     consent: "Ich bin einverstanden, dass meine Angaben zur Bearbeitung der Anfrage verwendet werden. *",
+    privacy: "Datenschutzerklärung",
     submit: "Angebot anfordern",
     sending: "Wird gesendet …",
     sent: "Danke! Ihre Anfrage ist angekommen. Sie erhalten Ihr Angebot am nächsten Werktag.",
+    demo: "Danke! Das Formular funktioniert. Dies ist eine Demo: Ihre Angaben wurden geprüft und verworfen, nicht gespeichert und nicht weitergeleitet.",
     error: "Das hat leider nicht geklappt. Bitte prüfen Sie Ihre Angaben und versuchen Sie es erneut.",
   },
   en: {
@@ -33,9 +35,11 @@ const copy = {
     date: "Preferred date",
     message: "Anything we should know?",
     consent: "I agree that my details are used to process this request. *",
+    privacy: "Privacy policy",
     submit: "Request a quote",
     sending: "Sending …",
     sent: "Thank you! Your request has arrived. You will get your quote the next working day.",
+    demo: "Thank you, the form works. This is a demo: your details were checked and discarded, not stored and not forwarded.",
     error: "Sorry, that didn't work. Please check your details and try again.",
   },
 } satisfies Record<Locale, unknown>;
@@ -44,7 +48,7 @@ const field = "w-full rounded-lg border border-slate-300 px-3 py-2 text-sm outli
 
 export function QuoteForm({ lang }: { lang: Locale }) {
   const t = copy[lang];
-  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "error">("idle");
+  const [status, setStatus] = useState<"idle" | "sending" | "sent" | "demo" | "error">("idle");
 
   async function submit(form: HTMLFormElement) {
     setStatus("sending");
@@ -54,11 +58,13 @@ export function QuoteForm({ lang }: { lang: Locale }) {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ ...data, consent: data.consent === "on", lang }),
     }).catch(() => null);
-    setStatus(res?.ok ? "sent" : "error");
+    if (!res?.ok) return setStatus("error");
+    const body: { forwarded?: boolean } = await res.json().catch(() => ({}));
+    setStatus(body.forwarded ? "sent" : "demo");
   }
 
-  if (status === "sent") {
-    return <p className="rounded-2xl bg-teal-50 p-6 text-teal-900">{t.sent}</p>;
+  if (status === "sent" || status === "demo") {
+    return <p className="rounded-2xl bg-teal-50 p-6 text-teal-900">{t[status]}</p>;
   }
 
   return (
@@ -118,7 +124,12 @@ export function QuoteForm({ lang }: { lang: Locale }) {
       <input name="website" tabIndex={-1} autoComplete="off" aria-hidden="true" className="hidden" />
       <label className="flex items-start gap-2 text-sm sm:col-span-2">
         <input name="consent" type="checkbox" required className="mt-1" />
-        <span>{t.consent}</span>
+        <span>
+          {t.consent}{" "}
+          <a href={`/${lang}/datenschutz`} target="_blank" className="underline">
+            {t.privacy}
+          </a>
+        </span>
       </label>
       {status === "error" && <p className="text-sm text-red-700 sm:col-span-2">{t.error}</p>}
       <button
