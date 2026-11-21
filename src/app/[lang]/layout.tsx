@@ -9,12 +9,35 @@ import "../globals.css";
 
 const geist = Geist({ variable: "--font-geist-sans", subsets: ["latin"] });
 
-export const metadata: Metadata = {
-  title: { template: "%s – KlarHaus (Demo)", default: "KlarHaus – Gebäudereinigung Bremen (Demo)" },
-  description: "Portfolio demo: website, AI FAQ assistant and quote form for a fictional cleaning company.",
-  // WHY: a fictional company must not show up in search results next to real ones.
-  robots: { index: false, follow: false },
+const SITE_TITLE = "KlarHaus – Gebäudereinigung Bremen (Demo)";
+const DESCRIPTION = {
+  de: "Portfolio-Demo: Website, KI-FAQ-Assistent und Angebotsformular für ein fiktives Reinigungsunternehmen in Bremen.",
+  en: "Portfolio demo: website, AI FAQ assistant and quote form for a fictional cleaning company in Bremen.",
 };
+
+export async function generateMetadata({ params }: LayoutProps<"/[lang]">): Promise<Metadata> {
+  const { lang } = await params;
+  const locale = hasLocale(lang) ? lang : "de";
+  return {
+    // WHY: share crawlers (Upwork, LinkedIn, WhatsApp) need absolute URLs for og:url and og:image.
+    metadataBase: new URL("https://klarhaus-demo.vercel.app"),
+    title: { template: "%s – KlarHaus (Demo)", default: SITE_TITLE },
+    description: DESCRIPTION[locale],
+    // WHY: a fictional company must not show up in search results next to real ones. Link previews still work.
+    robots: { index: false, follow: false },
+    openGraph: {
+      type: "website",
+      siteName: "KlarHaus (Demo)",
+      title: SITE_TITLE,
+      description: DESCRIPTION[locale],
+      url: `/${locale}`,
+      locale: locale === "de" ? "de_DE" : "en_US",
+      alternateLocale: locale === "de" ? "en_US" : "de_DE",
+    },
+    // WHY: X falls back to og:image when twitter:image is missing; this only asks for the large card.
+    twitter: { card: "summary_large_image" },
+  };
+}
 
 export function generateStaticParams() {
   return locales.map((lang) => ({ lang }));
