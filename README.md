@@ -1,10 +1,10 @@
 # KlarHaus: portfolio demo
 
-A website for a **fictional** Bremen cleaning company. It backs three Fiverr gigs at once:
+A bilingual (DE/EN) website for a **fictional** Bremen cleaning company, built as a technical showcase of three things:
 
-| Gig | What proves it here |
+| Feature | How it is implemented |
 |---|---|
-| Business website (Next.js) | 4 pages in German and English, mobile-first, quote form, WhatsApp button, map that loads only after consent |
+| Website (Next.js) | 4 pages in German and English, mobile-first, quote form, WhatsApp button, map that loads only after consent |
 | RAG chatbot | Chat widget answers from the FAQ (`src/content/site.ts`) with source links; Claude writes the answer when `ANTHROPIC_API_KEY` is set |
 | n8n automation | The quote form posts to `N8N_WEBHOOK_URL`; the n8n flow is described below |
 
@@ -53,8 +53,6 @@ The form sends JSON: `name, email, phone, service, size, frequency, date, messag
 2. **Anthropic** node, or **HTTP Request** with your Anthropic credential: ask for a 2-sentence German summary plus a rough price from the price list, e.g. *"Fasse diese Reinigungsanfrage in 2 Sätzen zusammen und schätze den Preis anhand der Preisliste: {{ JSON.stringify($json.body) }}"*.
 3. **Google Sheets**, Append row: date, name, email, service, m², summary.
 4. **Gmail** or **Send Email**: an alert to yourself with the summary and a reply link.
-
-Screenshot the canvas for the Fiverr gallery (Gig 4).
 
 ## Before deploying publicly
 
